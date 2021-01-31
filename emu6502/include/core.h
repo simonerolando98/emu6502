@@ -35,15 +35,21 @@ typedef struct cpu_t {
     byte n : 1;                 // negative flag
 } cpu_t;
 
+/* SYSTEM INIT FUNCTIONS */
+
 void mem_init(struct mem_t* mem);
 void cpu_reset(struct cpu_t* cpu);
 void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles);
 
+/* CPU HANDLING FUNCTIONS */
+
 byte cpu_fetch_byte(struct cpu_t* cpu, struct mem_t* mem, dword* cycles);
 word cpu_fetch_word(struct cpu_t* cpu, struct mem_t* mem, dword* cycles);
 
+/* MEMORY HANDLING FUNCTIONS */
 
 void mem_write_word(word data, word address, struct mem_t* mem, dword* cycles);
 byte mem_read_byte(struct mem_t* mem, word address, dword* cycles);
+word mem_read_word(struct mem_t* mem, word address, dword* cycles);
 
 #endif /* core_h */

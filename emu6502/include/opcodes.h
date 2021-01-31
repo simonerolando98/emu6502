@@ -198,4 +198,9 @@
     cpu->n = (cpu->a & 0b10000000) > 0; \
 }
 
+#define LDX_SET_STATUS(cpu) { \
+    cpu->z = (cpu->x == 0); \
+    cpu->n = (cpu->x & 0b10000000) > 0; \
+}
+
 #endif /* opcodes_h */

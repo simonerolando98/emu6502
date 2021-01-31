@@ -67,12 +67,12 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
                 LDA_SET_STATUS(cpu);
             } break;
             case OP_LDA_ZP: {
-                word zp_addr = cpu_fetch_byte(cpu, mem, &cycles);
+                byte zp_addr = cpu_fetch_byte(cpu, mem, &cycles);
                 cpu->a = mem_read_byte(mem, zp_addr, &cycles);
                 LDA_SET_STATUS(cpu);
             } break;
             case OP_LDA_ZP_X: {
-                word zp_addr = cpu_fetch_byte(cpu, mem, &cycles);
+                byte zp_addr = cpu_fetch_byte(cpu, mem, &cycles);
                 zp_addr += cpu->x;
                 cycles--;
                 cpu->a = mem_read_byte(mem, zp_addr, &cycles);
@@ -88,16 +88,42 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
                 addr += cpu->x;
                 cycles--;
                 cpu->a = mem_read_byte(mem, addr, &cycles);
+                LDA_SET_STATUS(cpu);
             } break;
             case OP_LDA_ABS_Y: {
                 word addr = cpu_fetch_word(cpu, mem, &cycles);
                 addr += cpu->y;
                 cycles--;
                 cpu->a = mem_read_byte(mem, addr, &cycles);
+                LDA_SET_STATUS(cpu);
             } break;
             case OP_LDA_IND_X: {
                 byte zp_addr = cpu_fetch_byte(cpu, mem, &cycles);
-                
+                zp_addr = (cpu->x + zp_addr) & 0xFF;
+                cycles -= 2;
+                word tgt_addr = mem_read_word(mem, zp_addr, &cycles);
+                cpu->a = mem_read_byte(mem, tgt_addr, &cycles);
+                cycles--;
+                LDA_SET_STATUS(cpu);
+            } break;
+            case OP_LDA_IND_Y: {
+                byte zp_addr = cpu_fetch_byte(cpu, mem, &cycles);
+                word tgt_addr = mem_read_word(mem, zp_addr, &cycles);
+                // completing address calculation
+                tgt_addr += 0xA;
+                cpu->a = mem_read_byte(mem, tgt_addr, &cycles);
+                cycles--;
+                LDA_SET_STATUS(cpu);
+            } break;
+            case OP_LDX_IM: {
+                byte val = cpu_fetch_byte(cpu, mem, &cycles);
+                cpu->x = val;
+                LDX_SET_STATUS(cpu);
+            } break;
+            case OP_LDX_ZP: {
+                byte addr = cpu_fetch_byte(cpu, mem, &cycles);
+                cpu->x = mem_read_byte(mem, addr, &cycles);
+                LDX_SET_STATUS(cpu);
             } break;
             case OP_JSR_ABS: {
                 word sub_addr = cpu_fetch_word(cpu, mem, &cycles);
@@ -140,6 +166,15 @@ byte mem_read_byte(struct mem_t* mem, word address, dword* cycles)
 {
     byte data = mem->data[address];
     (*cycles)--;
+    return data;
+}
+
+word mem_read_word(struct mem_t* mem, word address, dword* cycles)
+{
+    word data = mem->data[address];
+    data |= (mem->data[address + 1] << 8);
+    (*cycles) -=2;
+
     return data;
 }
 
