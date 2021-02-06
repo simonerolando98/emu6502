@@ -36,10 +36,16 @@ int main(int argc, const char * argv[]) {
     mem.data[0xFFFC] = OP_LDX_IM;
     mem.data[0xFFFD] = 0x41; */
 
-    /* LDX ZP TEST */
-    mem.data[0xFFFC] = OP_LDX_ZP;
-    mem.data[0xFFFD] = 0xFC;
-    mem.data[0x00FC] = 0x41;
+    /* LDX ZP_Y TEST
+    mem.data[0xFFFC] = OP_LDX_ZP_Y;
+    mem.data[0xFFFD] = 0x20;
+    cpu.y = 0x20;
+    mem.data[0x20 + 0x20] = 0x41; */
+
+    mem.data[0xFFFC] = OP_LDY_ZP_X;
+    mem.data[0xFFFD] = 0x52;
+    mem.data[0x0053] = 0x40;
+    cpu.x = 0x01;
     
     // running code
     cpu_execute(&cpu, &mem, ticks);

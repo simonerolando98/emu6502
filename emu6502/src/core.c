@@ -62,8 +62,7 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
         byte instr = cpu_fetch_byte(cpu, mem, &cycles);
         switch (instr) {
             case OP_LDA_IM: {
-                byte val = cpu_fetch_byte(cpu, mem, &cycles);
-                cpu->a = val;
+                cpu->a = cpu_fetch_byte(cpu, mem, &cycles);
                 LDA_SET_STATUS(cpu);
             } break;
             case OP_LDA_ZP: {
@@ -116,14 +115,47 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
                 LDA_SET_STATUS(cpu);
             } break;
             case OP_LDX_IM: {
-                byte val = cpu_fetch_byte(cpu, mem, &cycles);
-                cpu->x = val;
+                cpu->x = cpu_fetch_byte(cpu, mem, &cycles);
                 LDX_SET_STATUS(cpu);
             } break;
             case OP_LDX_ZP: {
                 byte addr = cpu_fetch_byte(cpu, mem, &cycles);
                 cpu->x = mem_read_byte(mem, addr, &cycles);
                 LDX_SET_STATUS(cpu);
+            } break;
+            case OP_LDX_ZP_Y: {
+                byte addr = cpu_fetch_byte(cpu, mem, &cycles);
+                addr += cpu->y;
+                cycles--;
+                cpu->x = mem_read_byte(mem, addr, &cycles);
+                LDX_SET_STATUS(cpu);
+            } break;
+            case OP_LDX_ABS: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles);
+                cpu->x = mem_read_byte(mem, addr, &cycles);
+                LDX_SET_STATUS(cpu);
+            } break;
+            case OP_LDX_ABS_Y: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles);
+                addr += cpu->y;
+                cycles--;
+                cpu->x = mem_read_byte(mem, addr, &cycles);
+                LDX_SET_STATUS(cpu);
+            } break;
+            case OP_LDY_IM: {
+                cpu->y = cpu_fetch_byte(cpu, mem, &cycles);
+                LDY_SET_STATUS(cpu);
+            } break;
+            case OP_LDY_ZP: {
+                byte addr = cpu_fetch_byte(cpu, mem, &cycles);
+                cpu->y = mem_read_byte(mem, addr, &cycles);
+                LDY_SET_STATUS(cpu);
+            } break;
+            case OP_LDY_ZP_X: {
+                byte addr = cpu_fetch_byte(cpu, mem, &cycles);
+                addr += cpu->x;
+                cpu->y = mem_read_byte(mem, addr, &cycles);
+                LDY_SET_STATUS(cpu);
             } break;
             case OP_JSR_ABS: {
                 word sub_addr = cpu_fetch_word(cpu, mem, &cycles);

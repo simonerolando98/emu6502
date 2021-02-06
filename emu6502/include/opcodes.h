@@ -203,6 +203,11 @@
     cpu->n = (cpu->x & 0b10000000) > 0; \
 }
 
+#define LDY_SET_STATUS(cpu) { \
+    cpu->z = (cpu->y == 0); \
+    cpu->n = (cpu->y & 0b10000000) > 0; \
+}
+
 #define AND_SET_STATUS(cpu) { \
     cpu->z = (cpu->a == 0); \
     cpu->n = (cpu->a & 0b10000000) > 0; \
