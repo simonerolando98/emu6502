@@ -46,7 +46,7 @@
 #define OP_BVS_REL 0x70             // branch if overflow set relative
 
 #define OP_BRK_IMP 0x00             // force interrupt break
-#define OP_CLC_IMP 018              // clear carry flag
+#define OP_CLC_IMP 0x18              // clear carry flag
 #define OP_CLD_IMP 0xD8             // clear decimal mode
 #define OP_CLI_IMP 0x58             // clear interrupt disable
 #define OP_CLV_IMP 0xB8             // clear overflow flag

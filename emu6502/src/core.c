@@ -61,6 +61,22 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
     while (cycles > 0) {
         byte instr = cpu_fetch_byte(cpu, mem, &cycles);
         switch (instr) {
+            case OP_CLC_IMP: {
+                cpu->c = 0x00;
+                cycles -= 2;
+            } break;
+            case OP_CLD_IMP: {
+                cpu->d = 0x00;
+                cycles -= 2;
+            } break;
+            case OP_CLI_IMP: {
+                cpu->i = 0x00;
+                cycles -= 2;
+            } break;
+            case OP_CLV_IMP: {
+                cpu->v = 0x00;
+                cycles -=2;
+            } break;
             case OP_LDA_IM: {
                 cpu->a = cpu_fetch_byte(cpu, mem, &cycles);
                 LDA_SET_STATUS(cpu);
@@ -154,6 +170,18 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
             case OP_LDY_ZP_X: {
                 byte addr = cpu_fetch_byte(cpu, mem, &cycles);
                 addr += cpu->x;
+                cpu->y = mem_read_byte(mem, addr, &cycles);
+                LDY_SET_STATUS(cpu);
+            } break;
+            case OP_LDY_ABS: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles);
+                cpu->y = mem_read_byte(mem, addr, &cycles);
+                LDY_SET_STATUS(cpu);
+            } break;
+            case OP_LDY_ABS_X: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles);
+                addr += cpu->x;
+                cycles--;
                 cpu->y = mem_read_byte(mem, addr, &cycles);
                 LDY_SET_STATUS(cpu);
             } break;
