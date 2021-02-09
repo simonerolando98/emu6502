@@ -77,6 +77,26 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
                 cpu->v = 0x00;
                 cycles -=2;
             } break;
+            case OP_INX_IMP: {
+                cpu->x++;
+                cycles -= 2;
+                INX_SET_STATUS(cpu);
+            } break;
+            case OP_INY_IMP: {
+                cpu->y++;
+                cycles -= 2;
+                INY_SET_STATUS(cpu);
+            } break;
+            case OP_JMP_ABS: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles);
+                cpu->pc = addr;
+                cycles--;
+            } break;
+            case OP_JMP_IND: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles);
+                cpu->pc = mem_read_word(mem, addr, &cycles);
+                cycles--;
+            } break;
             case OP_LDA_IM: {
                 cpu->a = cpu_fetch_byte(cpu, mem, &cycles);
                 LDA_SET_STATUS(cpu);

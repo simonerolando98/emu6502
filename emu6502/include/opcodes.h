@@ -213,4 +213,14 @@
     cpu->n = (cpu->a & 0b10000000) > 0; \
 }
 
+#define INX_SET_STATUS(cpu) { \
+    cpu->z = (cpu->x == 0); \
+    cpu->n = (cpu->x & 0b10000000) > 0; \
+}
+
+#define INY_SET_STATUS(cpu) { \
+    cpu->z = (cpu->y == 0); \
+    cpu->n = (cpu->y & 0b10000000) > 0; \
+}
+
 #endif /* opcodes_h */
