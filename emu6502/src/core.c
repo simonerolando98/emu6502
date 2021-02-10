@@ -215,6 +215,26 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
                 cycles--;
                 CMP_SET_STATUS(cpu, mem_read_byte(mem, addr, &cycles));
             } break;
+            case OP_CMP_ZP_X: {
+                byte addr = cpu_fetch_byte(cpu, mem, &cycles) + cpu->x;
+                cycles--;
+                CMP_SET_STATUS(cpu, mem_read_byte(mem, addr, &cycles));
+            } break;
+            case OP_CMP_ABS: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles);
+                cycles--;
+                CMP_SET_STATUS(cpu, mem_read_byte(mem, addr, &cycles));
+            } break;
+            case OP_CMP_ABS_X: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles) + cpu->x;
+                cycles--;
+                CMP_SET_STATUS(cpu, mem_read_byte(mem, addr, &cycles));
+            } break;
+            case OP_CMP_ABS_Y: {
+                word addr = cpu_fetch_word(cpu, mem, &cycles) + cpu->y;
+                cycles--;
+                CMP_SET_STATUS(cpu, mem_read_byte(mem, addr, &cycles));
+            } break;
             case OP_JSR_ABS: {
                 word sub_addr = cpu_fetch_word(cpu, mem, &cycles);
                 mem_write_word(cpu->pc - 1, cpu->sp, mem, &cycles);
