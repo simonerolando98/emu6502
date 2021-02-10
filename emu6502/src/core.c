@@ -205,6 +205,11 @@ void cpu_execute(struct cpu_t* cpu, struct mem_t* mem, dword cycles)
                 cpu->y = mem_read_byte(mem, addr, &cycles);
                 LDY_SET_STATUS(cpu);
             } break;
+            case OP_CMP_IM: {
+                byte value = cpu_fetch_byte(cpu, mem, &cycles);
+                cycles--;
+                CMP_SET_STATUS(cpu, value);
+            } break;
             case OP_JSR_ABS: {
                 word sub_addr = cpu_fetch_word(cpu, mem, &cycles);
                 mem_write_word(cpu->pc - 1, cpu->sp, mem, &cycles);

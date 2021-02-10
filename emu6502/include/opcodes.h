@@ -223,4 +223,9 @@
     cpu->n = (cpu->y & 0b10000000) > 0; \
 }
 
+#define CMP_SET_STATUS(cpu, val) { \
+    cpu->c = (cpu->a >= val); \
+    cpu->z = (cpu->a == val); \
+}
+
 #endif /* opcodes_h */
